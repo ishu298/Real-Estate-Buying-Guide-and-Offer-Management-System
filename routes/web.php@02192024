@@ -1,0 +1,185 @@
+<?php
+
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdornController;
+use App\Http\Controllers\CountController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\LiteratureController;
+use App\Http\Controllers\SocialLinkController;
+use App\Http\Controllers\LiteratureCategoryController;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+// Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+//     return view('dashboard');
+// })->name('dashboard');
+
+Route::middleware(['auth'])->group(function () {
+    // Define your authenticated routes here
+    Route::get('/dashboard', [CountController::class, 'index'])->name('dashboard');
+    // Other authenticated routes...
+});
+
+
+Route::get('/', function () {
+    return view('auth.login');
+});
+
+// Route::get('/', [HomeController::class, 'index']);
+Route::get('/post/{post}', [HomeController::class, 'singlepost'])->name('post');
+Route::get('/post/category/{category}', [HomeController::class, 'postByCategory'])->name('category');
+Route::get('/post/tag/{tag}', [HomeController::class, 'postByTag'])->name('tag');
+
+
+
+// Category
+Route::name('admin.')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/home', [AdminController::class, 'index']);
+    Route::get('/category/list', [CategoryController::class, 'list'])->name('category_list');
+    Route::post('/category/add', [CategoryController::class, 'add'])->name('add_category');
+    Route::get('/category/edit/{id}', [CategoryController::class, 'edit'])->name('edit_category');
+    Route::get('/category/delete/{id}', [CategoryController::class, 'destroy'])->name('destroy_category');
+});
+Route::post('editcategory', [CategoryController::class, 'update'])->name('update_category')->middleware(['auth:sanctum', 'verified']);
+
+// Post
+Route::name('admin.')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/product/list', [PostController::class, 'list'])->name('product_list');
+    Route::get('/product/add', [PostController::class, 'add'])->name('add_product');
+    Route::post('/product/store', [PostController::class, 'store'])->name('store_product');
+    Route::get('/product/edit/{id}', [PostController::class, 'edit'])->name('edit_product');
+    Route::get('/product/delete/{id}', [PostController::class, 'destroy'])->name('destroy_product');
+    Route::post('/product/update', [PostController::class, 'update'])->name('update_product');
+});
+
+
+
+
+// Users 
+Route::name('admin.')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/user/list', [UserController::class, 'list'])->name('user_list');
+    Route::get('/user/add', [UserController::class, 'add'])->name('add_user');
+    Route::post('/user/store', [UserController::class, 'store'])->name('store_user');
+    Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('edit_user');
+    Route::get('/user/delete/{id}', [UserController::class, 'destroy'])->name('delete_user');
+});
+Route::post('/user/update', [UserController::class, 'update'])->name('update_user');
+
+// Users
+
+
+// Literature Category
+Route::name('admin.')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/literature_category/list', [LiteratureCategoryController::class, 'list'])->name('literature_category_list');
+    Route::post('/literature_category/add', [LiteratureCategoryController::class, 'add'])->name('add_literature_category');
+    Route::get('/literature_category/edit/{id}', [LiteratureCategoryController::class, 'edit'])->name('edit_literature_category');
+    Route::get('/literature_category/delete/{id}', [LiteratureCategoryController::class, 'destroy'])->name('delete_literature_category');
+});
+Route::post('editliterature_category', [LiteratureCategoryController::class, 'update'])->middleware(['auth:sanctum', 'verified'])->name('update_literature_category');
+
+
+// Literature
+Route::name('admin.')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/literature/list', [LiteratureController::class, 'list'])->name('literature_list');
+    Route::get('/literature/add', [LiteratureController::class, 'add'])->name('add_literature');
+    Route::post('/literature/store', [LiteratureController::class, 'store'])->name('store_literature');
+    Route::get('/literature/edit/{id}', [LiteratureController::class, 'edit'])->name('edit_literature');
+    Route::get('/literature/delete/{id}', [LiteratureController::class, 'destroy'])->name('destroy_literature');
+    Route::post('/literature/update', [LiteratureController::class, 'update'])->name('update_literature');
+});
+
+
+
+// Literature
+Route::name('admin.')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/event/list', [EventController::class, 'list'])->name('event_list');
+    Route::get('/event/add', [EventController::class, 'add'])->name('add_event');
+    Route::post('/event/store', [EventController::class, 'store'])->name('store_event');
+    Route::get('/event/edit/{id}', [EventController::class, 'edit'])->name('edit_event');
+    Route::get('/event/delete/{id}', [EventController::class, 'destroy'])->name('destroy_event');
+});
+Route::post('editpost', [EventController::class, 'update'])->name('update_event')->middleware(['auth:sanctum', 'verified']);
+
+
+
+// Adron
+Route::name('admin.')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/adorn/list', [AdornController::class, 'list'])->name('adorn_list');
+    Route::get('/adorn/detail/{id}', [AdornController::class, 'adron_detail'])->name('adron_detail');
+    Route::get('/adorn/delete/{id}', [AdornController::class, 'delete_adorn'])->name('delete_adorn');
+});
+
+Route::get('/test_email', function () {
+    try {  
+    Mail::raw('Hello World!', function ($msg) {
+        $msg->to('ashishtomar.liangtuang@gmail.com')->subject('Test Email');
+    });
+    } catch (\Exception $e) {
+    Log::error('SES API request failed: ' . $e->getMessage());
+    Log::error('Stack trace: ' . $e->getTraceAsString());
+    }
+    dd('mail has been sent.');
+});
+
+// Requests
+Route::name('admin.')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/request/contact', [UserController::class, 'contact_list'])->name('contact_list');
+    Route::get('/request/contact_all_reply/{id}', [UserController::class, 'contact_all_reply'])->name('contact_all_reply');
+    Route::get('/request/enquire_all_reply/{id}', [UserController::class, 'enquire_all_reply'])->name('enquire_all_reply');
+    Route::get('/request/enquire', [UserController::class, 'enquire_list'])->name('enquire_list');
+    Route::get('request/contact/delete/{id}', [UserController::class, 'delete_contact'])->name('delete_contact');
+    Route::get('request/contactReply/delete/{id}/{contact_id}', [UserController::class, 'delete_contact_reply'])->name('delete_contact_reply');
+    Route::get('request/enquireReply/delete/{id}/{contact_id}', [UserController::class, 'delete_enquire_reply'])->name('delete_enquire_reply');
+    Route::get('request/enquire/delete/{id}', [UserController::class, 'delete_enquire'])->name('delete_enquire');
+    Route::get('request/enquire/detail/{id}', [UserController::class, 'enquire_detail'])->name('enquire_detail');
+    Route::get('request/contact/detail/{id}', [UserController::class, 'contact_detail'])->name('contact_detail');
+    Route::post('request/contact_reply', [UserController::class, 'send_contact_reply'])->name('send_contact_reply');
+    Route::post('request/enquire_reply', [UserController::class, 'send_enquire_reply'])->name('send_enquire_reply');
+    Route::get('manage-about-us', [UserController::class, 'manage_about_us'])->name('manage_about_us');
+    Route::post('add_n_update_about_us', [UserController::class, 'add_n_update_about_us'])->name('add_n_update_about_us');
+    Route::post('store_contact_info', [UserController::class, 'store_contact_info'])->name('store_contact_info');
+    Route::get('manage-contact-info', [UserController::class, 'manage_contact_info'])->name('manage_contact_info');
+    Route::get('manage-privacy-policy', [UserController::class, 'manage_privacy_policy'])->name('manage_privacy_policy');
+    Route::post('add_n_update_privacy_policy', [UserController::class, 'add_n_update_privacy_policy'])->name('add_n_update_privacy_policy');
+
+    Route::get('terms-conditions', [UserController::class, 'terms_conditions'])->name('terms_conditions');
+    Route::post('add_n_update_terms_conditions', [UserController::class, 'add_n_update_terms_conditions'])->name('add_n_update_terms_conditions');
+    Route::get('newsletter', [UserController::class, 'newsletter'])->name('newsletter');
+    Route::get('delete-newsletter/{id}', [UserController::class, 'delete_newsletter'])->name('delete_newsletter');
+    Route::get('manage-email-template', [UserController::class, 'manage_email_template'])->name('manage_email_template');
+    Route::get('edit-email-template/{id}', [UserController::class, 'edit_email_template'])->name('edit_email_template');
+    Route::post('update_email_template', [UserController::class, 'update_email_template'])->name('update_email_template');
+    Route::get('delete-email-template/{id}', [UserController::class, 'delete_email_template'])->name('delete_email_template');
+
+    Route::get('manage-website-setting', [UserController::class, 'manage_website_setting'])->name('manage_website_setting');
+    Route::post('update_footer_text', [UserController::class, 'update_footer_text'])->name('update_footer_text');
+    
+});
+
+
+// Adron
+Route::name('admin.')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/order/list', [CheckoutController::class, 'order_list'])->name('order_list');
+    Route::get('/order/detail/{id}', [CheckoutController::class, 'order_detail'])->name('order_detail');
+    
+});

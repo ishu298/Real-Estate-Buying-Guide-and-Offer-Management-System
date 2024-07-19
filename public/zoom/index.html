@@ -1,0 +1,85 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>ViewImage.js Library Examples</title>
+<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.1.3/flatly/bootstrap.min.css">
+<style>
+  h3 {margin: 2rem auto;}
+</style>
+</head>
+
+<body>
+<div class="container" style="margin:100px auto;">
+  <h1>ViewImage.js Library Examples</h1>
+  <div id="carbon-block" style="margin:30px auto"></div>
+<div style="margin:30px auto"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2783044520727903"
+     crossorigin="anonymous"></script>
+<!-- jQuery_demo -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-2783044520727903"
+     data-ad-slot="2780937993"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script></div>
+  <p class="lead">A super tiny (~ 2kb gzipped) and fully responsive image zoom & gallery lightbox plugin for jQuery & Vanilla JavaScript.</p>
+  <h3>Gallery Lightbox</h3>
+  <!-- Add the view-image attribute to the container -->
+  <div id="DEMO-1" class="row" view-image>
+    <!-- Add Images To The Container -->
+    <div class="col">
+        <img src="https://source.unsplash.com/xVyGMkuOUZY/1920x1080" alt="jQueryScript.Net" class="img-fluid">
+    </div>
+    <div class="col">
+        <img src="https://source.unsplash.com/qF56JfCIlx0/1920x1080" alt="jQueryScript.Net" class="img-fluid">
+    </div>
+    <div class="col">
+        <img src="https://source.unsplash.com/V5Owjg-ZNto/1920x1080" alt="jQueryScript.Net" class="img-fluid">
+    </div>
+    <div class="col">
+        <!-- Ignore images using the no-view attribute -->
+        <!-- Thanks for watching. -->
+        <img src="https://source.unsplash.com/THC13xRi_q0/1920x1080" alt="jQueryScript.Net" class="img-fluid" no-view>
+    </div>
+  </div>
+  <h3>Text Link</h3>
+  <!-- The Plugin also supports image links -->
+  <div id="DEMO-2" class="row" view-image>
+    <p>This Is <a href="https://source.unsplash.com/hVk6pIFbW9o/1920x1080">Image Link 1</a> and <a href="https://source.unsplash.com/p0ZvBVpW3KY/1920x1080">Image Link 2</a></p>
+  </div>
+</div>
+</div>
+<!-- Load the view-image.js library -->
+<script src="view-image.js?v2.1.0"></script>
+<script>
+  // initialize the library and done
+  window.ViewImage && ViewImage.init('#DEMO-1 img, #DEMO-2 a');
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1VDDWMRSTH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1VDDWMRSTH');
+</script>
+<script>
+try {
+  fetch(new Request("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", { method: 'HEAD', mode: 'no-cors' })).then(function(response) {
+    return true;
+  }).catch(function(e) {
+    var carbonScript = document.createElement("script");
+    carbonScript.src = "//cdn.carbonads.com/carbon.js?serve=CK7DKKQU&placement=wwwjqueryscriptnet";
+    carbonScript.id = "_carbonads_js";
+    document.getElementById("carbon-block").appendChild(carbonScript);
+  });
+} catch (error) {
+  console.log(error);
+}
+</script>
+</body>
+</html>
