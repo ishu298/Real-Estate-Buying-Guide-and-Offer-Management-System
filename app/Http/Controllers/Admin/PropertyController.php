@@ -14,16 +14,8 @@ class PropertyController extends Controller
 {
     public function index()
     {
-       // $properties = Property::with('images')->get();
-
-       $properties = Property::all();
-        foreach($properties as $p)
-        {
-            foreach($p->images as $image){
-          $s[] = $image->image_path;
-            }
-        }
-        return $s;
+        $properties = Property::with('images')->get();
+       // $properties = Property::all();
         return view('admin.property.index',compact('properties'));
     }
 
@@ -39,7 +31,7 @@ class PropertyController extends Controller
 
     public function store(Request $request)
 {
-    $validatedData = $request->validate([
+      $validatedData = $request->validate([
         'name' => 'required',
         'description' => 'nullable',
         'price' => 'required|numeric',
@@ -48,7 +40,7 @@ class PropertyController extends Controller
         'bathrooms' => 'required|integer',
         'square_feet' => 'required|integer',
         'type' => 'required|string',
-        'status' => 'required|in:available,unavailable', // Validate against ENUM values
+        'status' => 'required|in:available,unavailable',
         'images.*' => 'required|image|mimes:jpg,jpeg,png,bmp|max:2048',
     ]);
 
@@ -65,24 +57,16 @@ class PropertyController extends Controller
         'status' => $validatedData['status'],
     ]);
 
-    // Handle image uploads if files are present
     if ($request->hasFile('images')) {
         foreach ($request->file('images') as $image) {
-            // Generate a unique name for the image
             $imageName = uniqid() . '_' . time() . '.' . $image->getClientOriginalExtension();
-
-            // Store the image in the specified directory with the generated name
             $image->storeAs('public/images', $imageName); 
-
-            // Store image record in property_images table
             PropertyImage::updateOrCreate(['id' => $request->id], [
                 'property_id' => $property->id,
                 'image_path' => Storage::url('images/'.$imageName),
             ]);
         }
     }
-
-    // Redirect to property list with success message
     return redirect()->route('admin.property_list')->with('success', $request->id ? 'Property Updated Successfully' : 'Property Added Successfully');
 }
 

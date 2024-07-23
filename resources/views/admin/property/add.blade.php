@@ -121,7 +121,7 @@
                                     <!-- End existing image previews -->
 
                                     <!-- Hidden file input for new images -->
-                                    <input type="file" id="image" class="form-control d-none" name="images[]" multiple accept="image/*">
+                                   
                                 </div>
                                 <div class="input-group mt-3">
                                     <div class="input-group-append">
@@ -183,65 +183,63 @@
 </style>
 <script>
 $(document).ready(function() {
-    // Counter for tracking dynamically added file inputs
     var fileInputCounter = 0;
 
-    // Handle click on "Add More" button
     $('#add-more').on('click', function() {
-        // Create a new file input element
         var fileInput = $('<input>').attr({
             type: 'file',
             name: 'images[]',
-            style: 'display:none;'
+            accept: 'image/*',
+            style: 'display:none'
         });
 
-        // Create a div to wrap the file input
         var previewDiv = $('<div>').addClass('image-preview-item');
-        previewDiv.append(fileInput); // Append file input inside the div
+        
+       
+        var wrapperDiv = $('<div>').addClass('image-input-wrapper');
+        wrapperDiv.append(fileInput); 
+        wrapperDiv.append(previewDiv);
 
-        // Append the wrapped file input to the #image-preview container
-        $('#image-preview').append(previewDiv);
-
-        // Trigger click event on the newly added file input to open file picker dialog
+        $('#image-preview').append(wrapperDiv);
         fileInput.click();
-
-        // Increment the file input counter for the next file input
         fileInputCounter++;
     });
 
-    // Handle change event on dynamically added file inputs
     $(document).on('change', 'input[type=file]', function() {
         var files = $(this)[0].files;
+        var wrapperDiv = $(this).closest('.image-input-wrapper');
+
         for (var i = 0; i < files.length; i++) {
             var file = files[i];
-            var reader = new FileReader();
+            var reader = new FileReader(); 
 
             reader.onload = function(e) {
-                var imgSrc = e.target.result;  // Base64 encoded image data
+                var imgSrc = e.target.result;  
 
-                // Create preview HTML
                 var preview = '<div class="image-preview-item">';
                 preview += '<img src="' + imgSrc + '" class="img-thumbnail">';
                 preview += '<button type="button" class="btn-remove"><i class="fas fa-times"></i></button>';
                 preview += '</div>';
 
-                // Append to preview container
-                $('#image-preview').append(preview);
+                wrapperDiv.find('.image-preview-item').remove(); 
+                wrapperDiv.append(preview);
             };
 
             reader.readAsDataURL(file);
         }
     });
 
-    // Handle image remove
     $(document).on('click', '.btn-remove', function() {
-        // Remove the preview item
-        $(this).closest('.image-preview-item').remove();
+        var previewDiv = $(this).closest('.image-preview-item');
+        var wrapperDiv = previewDiv.closest('.image-input-wrapper');
 
-        // Find and remove the corresponding file input element
-       
+        previewDiv.remove();
+        if (wrapperDiv.find('.image-preview-item').length === 0) {
+            wrapperDiv.remove();
+        }
     });
 });
+
 </script>
 
 @endsection

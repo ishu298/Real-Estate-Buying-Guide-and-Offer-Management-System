@@ -12,8 +12,8 @@
 
     .property-image-container img {
         width: 100%;
-        height: 100%; /* Ensure images fill the container */
-        object-fit: cover; /* Maintain aspect ratio and cover container */
+        height: 100%;
+        object-fit: cover; 
         transition: opacity 0.5s ease;
     }
 </style>
@@ -72,7 +72,7 @@
                             <div class="property-image-container gallerys">
                                 @foreach($property->images as $key => $image)
                                 <a href="{{ asset($image->image_path) }}">
-                                    <img src="{{ asset($image->first()->image_path) }}" class="img-fluid" alt="Thumbnail">
+                                    <img src="{{ asset($image->image_path) }}" class="img-fluid" alt="Thumbnail">
                                 </a>
                                 @endforeach
                             </div>
